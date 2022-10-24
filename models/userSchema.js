@@ -58,7 +58,7 @@ userSchema.pre("save",async function(next){
  
 
     next()
-})
+});
 
 //token generate
 userSchema.methods.generateAuthtoken=async function(){
@@ -67,7 +67,7 @@ userSchema.methods.generateAuthtoken=async function(){
         expiresIn:"1d"
       });
       this.tokens=this.tokens.concat({token:token})
-      await this.save
+      await this.save();
       return token;
   } catch (error) {
     res.status(422).json(error)

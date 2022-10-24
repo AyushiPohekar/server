@@ -25,39 +25,6 @@ router.get("/", function (req, res) {
 
 //for user Registration
 
-// router.post("/register", async (req, res) => {
-//   const { fname, email, password, cpassword } = req.body;
-
-//   if (!fname || !email || !password || !cpassword) {
-//     res.status(422).json({ error: "fill all the details" });
-//   }
-//   try {
-//     const preuser = await userdb.findOne({ email: email });
-
-//     if (preuser) {
-//       res.status(422).json({ error: "This email is Already Exist" });
-//     } else if (password !== cpassword) {
-//       res
-//         .status(422)
-//         .json({ error: "Password and confirm Password does not match" });
-//     } else {
-//       const finalUser = new userdb({
-//         fname,
-//         email,
-//         password,
-//         cpassword,
-//       });
-
-//       //password hashing
-
-//       const storeData = await finalUser.save();
-//       //console.log(storeData);
-//       res.status(201).json({ status: 201, storeData });
-//     }
-//   } catch (error) {
-//     res.status(422).json({ error: "catch block error" });
-//   }
-// });
 
 router.post("/register", async (req, res) => {
   const { fname, email, password, cpassword } = req.body;
@@ -124,7 +91,7 @@ router.post("/login", async (req, res) => {
         });
         const result = {
           userValid,
-          token,
+          token
         };
         res.status(201).json({ status: 201, result });
       }
@@ -179,7 +146,7 @@ router.post("/sendpasswordlink",async(req,res)=>{
 
       // token generate for reset password
       const token = jwt.sign({_id:userfind._id},keysecret,{
-          expiresIn:"1d"
+          expiresIn:"120s"
       });
       
       const setusertoken = await userdb.findByIdAndUpdate({_id:userfind._id},{verifytoken:token},{new:true});
@@ -187,7 +154,7 @@ router.post("/sendpasswordlink",async(req,res)=>{
 
       if(setusertoken){
           const mailOptions = {
-              from:"ayushi2021.29@gmail.com",
+              from:process.env.EMAIL,
               to:email,
               subject:"Sending Email For password Reset",
               text:`This Link Valid For 2 MINUTES http://localhost:3000/forgotpassword/${userfind.id}/${setusertoken.verifytoken}`
