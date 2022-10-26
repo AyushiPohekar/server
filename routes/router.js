@@ -1,5 +1,5 @@
 const express = require("express");
-const router = new express.Router();
+const router =  express.Router();
 const userdb = require("../models/userSchema");
 const bcrypt = require("bcryptjs");
 const authenticate = require("../middleware/authenticate");
@@ -30,17 +30,17 @@ router.post("/register", async (req, res) => {
   const { fname, email, password, cpassword } = req.body;
 
   if (!fname || !email || !password || !cpassword) {
-    res.status(422).json({ error: "fill all the details" });
+    res.status(400).json({ error: "fill all the details" });
   }
 
   try {
     const preuser = await userdb.findOne({ email: email });
 
     if (preuser) {
-      res.status(422).json({ error: "This Email is Already Exist" });
+      res.status(400).json({ error: "This Email is Already Exist" });
     } else if (password !== cpassword) {
       res
-        .status(422)
+        .status(400)
         .json({ error: "Password and Confirm Password Not Match" });
     } else {
       const finalUser = new userdb({
@@ -58,7 +58,7 @@ router.post("/register", async (req, res) => {
       res.status(201).json({ status: 201, storeData });
     }
   } catch (error) {
-    res.status(422).json(error);
+    res.status(500).json(error);
     console.log("catch block error");
   }
 });
