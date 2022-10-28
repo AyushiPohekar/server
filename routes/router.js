@@ -30,14 +30,14 @@ router.post("/register", async (req, res) => {
   const { fname, email, password, cpassword } = req.body;
 
   if (!fname || !email || !password || !cpassword) {
-    res.status(400).json({ error: "fill all the details" });
+    res.status(422).json({ error: "fill all the details" });
   }
 
   try {
     const preuser = await userdb.findOne({ email: email });
 
     if (preuser) {
-      res.status(400).json({ error: "This Email is Already Exist" });
+      res.status(422).json({ error: "This Email is Already Exist" });
     } else if (password !== cpassword) {
       res
         .status(400)
