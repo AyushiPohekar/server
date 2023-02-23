@@ -35,7 +35,7 @@ router.post("/register", async (req, res) => {
     const preuser = await userdb.findOne({ email: email });
 
     if (preuser) {
-      res.status(422).json({ error: "This Email is Already Exist" });
+      res.status(422).json({status:422, error: "This Email is Already Exist" });
     } else if (password !== cpassword) {
       res
         .status(400)
